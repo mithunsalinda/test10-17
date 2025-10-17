@@ -1,0 +1,155 @@
+/* ---- Theme tokens ---- */
+:root{
+  --text:#111827;
+  --muted:#6b7280;
+  --bg:#fff;
+
+  --border:#d1d5db;           /* input/button border */
+  --line:#76797e;             /* connector lines */
+  --hover:#f9fafb;
+  --blue:#2563eb;
+  --ring:rgba(59,130,246,.35);
+
+  /* geometry */
+  --indent:28px;                 /* horizontal indent per level */
+  --elbow:calc(var(--indent)/2); /* horizontal elbow length */
+  --row-h:36px;                  /* input row height (approx) */
+  --radius:8px;
+
+  /* connector precision */
+  --elbow-overlap:1px;           /* overlap elbow under input border */
+  --elbow-bias:0px;              /* sub-pixel vertical nudge (e.g., 0.5px or -0.5px) */
+  --group-spine-inset:6px;       
+}
+
+*{ box-sizing:border-box; }
+
+
+.editable-tree{
+  max-width:768px;
+  margin:0 auto;
+  padding:16px;
+  color:var(--text);
+  font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+}
+.toolbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.title{ font-size:1.125rem; font-weight:600; }
+
+
+.btn{
+  border:1px solid var(--border);
+  background:var(--bg);
+  padding:6px 12px;
+  border-radius:var(--radius);
+  font-size:14px;
+  cursor:pointer;
+}
+.btn:hover{ background:var(--hover); }
+.btn--square{ width:32px; height:32px; padding:0; display:grid; place-items:center; font-size:20px; line-height:1; }
+.btn--dashed{ border-style:dashed; color:var(--blue); }
+.btn--icon{ border:1px solid var(--border); background:var(--bg); border-radius:6px; padding:4px 8px; font-size:12px; }
+.btn--icon:hover{ background:var(--hover); }
+.btn:disabled, .btn--disabled{ opacity:.45; cursor:not-allowed; background:#f3f4f6; }
+
+
+.node{ position:relative; }
+.nodeRow{
+  position:relative;
+  display:flex;
+  gap:8px;
+  align-items:center;
+ 
+}
+
+
+.nodeInput{
+  width:18rem;
+  padding:6px 8px;
+  border:1px solid var(--border);
+  font-size:14px;
+  background:var(--bg);
+}
+.nodeInput:focus{ outline:none; border-color:#93c5fd; box-shadow:0 0 0 2px var(--ring); }
+.nodeInput:disabled{ background:#f3f4f6; color:var(--muted); }
+
+
+.actions{
+  margin-left:8px; display:flex; gap:8px; align-items:center;
+  opacity:0; pointer-events:none; transition:opacity .15s ease-in-out;
+}
+.node:hover .actions{ opacity:1; pointer-events:auto; }
+.readonlyToggle{ display:flex; align-items:center; gap:6px; font-size:12px; color:#374151; user-select:none; }
+
+
+
+.treeList{
+  position:relative;
+  margin-left:var(--indent);  }              
+
+.treeList::before{
+  content:"";
+  position:absolute;
+  left:calc(var(--elbow) * -1);
+top: 18px;
+    bottom: 18px;
+  width:1px;
+  background-image:repeating-linear-gradient(
+    to bottom,
+    var(--line), var(--line) 4px,
+    transparent 4px, transparent 8px
+  );
+}
+
+.treeList > .node > .nodeRow::before{
+  content:"";
+  position:absolute;
+  left:calc(var(--elbow) * -1 - var(--elbow-overlap));
+  top:50%;
+  transform:translateY(calc(-50% - var(--elbow-bias)));
+  height:1px;
+  width:calc(var(--elbow) + var(--elbow-overlap));
+  background:var(--line);
+}
+
+
+.children{
+  position:relative;
+  margin-left:var(--indent);                
+  padding-left:0;
+}
+
+.children::before{
+  content:"";
+  position:absolute;
+  left:calc(var(--elbow) * -1);
+  top:var(--group-spine-inset);
+  bottom:var(--group-spine-inset);
+  width:1px;
+  background-image:repeating-linear-gradient(
+    to bottom,
+    var(--line), var(--line) 4px,
+    transparent 4px, transparent 8px
+  );
+}
+
+.children > .node > .nodeRow::before{
+  content:"";
+  position:absolute;
+  left:calc(var(--elbow) * -1 - var(--elbow-overlap));
+  top:50%;
+  transform:translateY(calc(-50% - var(--elbow-bias)));
+  height:1px;
+  width:calc(var(--elbow) + var(--elbow-overlap));
+  background:var(--line);
+}
+
+.empty{
+  border:1px dashed var(--line);
+  border-radius:10px;
+  padding:32px;
+  text-align:center;
+  font-size:14px;
+  color:var(--muted);
+}
+.debug{ margin-top:16px; font-size:12px; color:var(--muted); user-select:none; }
+.debug pre{ margin-top:8px; background:#f9fafb; border-radius:6px; padding:8px; overflow:auto; }
